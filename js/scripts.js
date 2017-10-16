@@ -61,12 +61,6 @@ class Zmeika {
     }
 
     // spawn() {
-    //     this.coords.push(
-    //         {
-    //             x: getRandomArbitrary(0, Game.size),
-    //             y: getRandomArbitrary(0, Game.size),
-    //         }
-    //     );
     // }
 
     changeDirection(direction) {
