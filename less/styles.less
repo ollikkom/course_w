@@ -1,42 +1,5 @@
-@font-face {
-  font-family: "Roboto";
-  font-style: normal;
-  font-weight: 300;
-  src: local('Roboto Light'), local('Roboto-Light'), url("../fonts/Roboto-Light.ttf") format('truetype');
-}
-@font-face {
-  font-family: "Roboto";
-  font-style: italic;
-  font-weight: 300;
-  src: local('Roboto Light Italic'), local('Roboto-LightItalic'), url("../fonts/Roboto-LightItalic.ttf") format('truetype');
-}
-/* Normal */
-@font-face {
-  font-family: "Roboto";
-  font-style: normal;
-  font-weight: 400;
-  src: local('Roboto Regular'), local('Roboto-Regular'), url("../fonts/Roboto-Regular.ttf") format('truetype');
-}
-@font-face {
-  font-family: "Roboto";
-  font-style: italic;
-  font-weight: 400;
-  src: local('Roboto Italic'), local('Roboto-Italic'), url("../fonts/Roboto-Italic.ttf") format('truetype');
-}
-
-/* Bold */
-@font-face {
-  font-family: "Roboto";
-  font-style: normal;
-  font-weight: 700;
-  src: local('Roboto Bold'), local('Roboto-Bold'), url("../fonts/Roboto-Bold.ttf") format('truetype');
-}
-@font-face {
-  font-family: "Roboto";
-  font-style: italic;
-  font-weight: 700;
-  src: local('Roboto Bold Italic'), local('Roboto-BoldItalic'), url("../fonts/Roboto-BoldItalic.ttf") format('truetype');
-}
+@import 'fonts';
+@import 'vars';
 
 html, body {
   font-family: 'Roboto', sans-serif;
@@ -67,6 +30,7 @@ a {
   justify-content: center;
   height: 100%;
   width: 100%;
+  transition: transform .5s ease-out;
 }
 h1 {
   color: #FFF;
@@ -76,11 +40,11 @@ h1 {
 .gameGrid {
   /*background-color: transparent;*/
   /*background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);*/
-  background-size: 20px 20px;
-  background-image: linear-gradient(to right, rgba(255, 255, 255, .05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, .05) 1px, transparent 1px);
-  height:100%;
-  border-right: 1px solid rgba(255, 255, 255, .025);
-  border-bottom: 1px solid rgba(255, 255, 255, .025);
+  background-size: @gridSize @gridSize;
+  background-image: linear-gradient(to right, rgba(220, 119, 208, 0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(220, 119, 208, 0.4) 1px, transparent 1px);
+  height: 100%;
+  border-right: 1px solid rgba(220, 119, 208, 0.2);
+  border-bottom: 1px solid rgba(220, 119, 208, 0.2);
 }
 
 .gameArea {
@@ -91,19 +55,100 @@ h1 {
   /*border: 12px solid #000;*/
 }
 
-.zmeika-1 {
+.snake {
   position: absolute;
   left: 0;
   top: 0;
 }
 
-.zmeika-1 > div {
+.snake > div {
   position: absolute;
   left: 0;
   top: 0;
-  width: 20px;
-  height: 20px;
-  background: rgba(255, 255, 255, .025);
-  transition: all .25s;
+  width: @gridSize;
+  height: @gridSize;
+  background: rgba(220, 119, 208, 0.8);
+  transition: all @transitionTime;
   will-change: transform;
+}
+
+.apple {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: @gridSize - 4;
+  height: @gridSize - 4;
+  margin: 2px;
+  border-radius: 50%;
+  background: rgba(167, 220, 84, 0.4);
+}
+
+.modal-overlay {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0,0,0,.5);
+  opacity: 0;
+  transition: opacity .5s;
+
+  .modal {
+    text-align: center;
+    width: 25%;
+    padding: 60px 0;
+    background: #80c8c8;
+    transform: scale(0);
+    opacity: 0;
+    will-change: transform;
+    transition: transform 0.5s cubic-bezier(.18,.89,.32,1.28), opacity 0.5s;
+  }
+  .modal-title {
+    color: #FFF;
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+  .restart-btn {
+    cursor: pointer;
+    color: #FFF;
+    font-weight: 300;
+    line-height: 24px;
+    display: inline-block;
+    border-bottom: 1px solid rgba(255,255,255,0);
+    transition: border-color .5s;
+
+    &:hover {
+      border-color: rgba(255,255,255,1);
+    }
+  }
+}
+
+.modal-opened {
+  .modal-overlay {
+    opacity: 1;
+    .modal {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .app {
+    transform: scale(0.9);
+  }
+}
+
+.modal-closing {
+  .modal-overlay {
+    opacity: 0;
+    .modal {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+  .app {
+    transform: scale(1);
+  }
 }

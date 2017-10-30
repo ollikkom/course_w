@@ -62,6 +62,7 @@ a {
   justify-content: center;
   height: 100%;
   width: 100%;
+  transition: transform 0.5s ease-out;
 }
 h1 {
   color: #FFF;
@@ -72,10 +73,10 @@ h1 {
   /*background-color: transparent;*/
   /*background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);*/
   background-size: 20px 20px;
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-image: linear-gradient(to right, rgba(220, 119, 208, 0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(220, 119, 208, 0.4) 1px, transparent 1px);
   height: 100%;
-  border-right: 1px solid rgba(255, 255, 255, 0.025);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.025);
+  border-right: 1px solid rgba(220, 119, 208, 0.2);
+  border-bottom: 1px solid rgba(220, 119, 208, 0.2);
 }
 .gameArea {
   position: relative;
@@ -84,18 +85,89 @@ h1 {
   box-sizing: border-box;
   /*border: 12px solid #000;*/
 }
-.zmeika-1 {
+.snake {
   position: absolute;
   left: 0;
   top: 0;
 }
-.zmeika-1 > div {
+.snake > div {
   position: absolute;
   left: 0;
   top: 0;
   width: 20px;
   height: 20px;
-  background: rgba(255, 255, 255, 0.025);
-  transition: all .25s;
+  background: rgba(220, 119, 208, 0.8);
+  transition: all 0.15s;
   will-change: transform;
+}
+.apple {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+  border-radius: 50%;
+  background: rgba(167, 220, 84, 0.4);
+}
+.modal-overlay {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity .5s;
+}
+.modal-overlay .modal {
+  text-align: center;
+  width: 25%;
+  padding: 60px 0;
+  background: #80c8c8;
+  transform: scale(0);
+  opacity: 0;
+  will-change: transform;
+  transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.5s;
+}
+.modal-overlay .modal-title {
+  color: #FFF;
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+.modal-overlay .restart-btn {
+  cursor: pointer;
+  color: #FFF;
+  font-weight: 300;
+  line-height: 24px;
+  display: inline-block;
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
+  transition: border-color 0.5s;
+}
+.modal-overlay .restart-btn:hover {
+  border-color: #ffffff;
+}
+.modal-opened .modal-overlay {
+  opacity: 1;
+}
+.modal-opened .modal-overlay .modal {
+  transform: scale(1);
+  opacity: 1;
+}
+.modal-opened .app {
+  transform: scale(0.9);
+}
+.modal-closing .modal-overlay {
+  opacity: 0;
+}
+.modal-closing .modal-overlay .modal {
+  transform: scale(4);
+  opacity: 0;
+}
+.modal-closing .app {
+  transform: scale(1);
 }
