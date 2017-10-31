@@ -80,7 +80,31 @@ h1 {
   height: @gridSize - 4;
   margin: 2px;
   border-radius: 50%;
-  background: rgba(167, 220, 84, 0.4);
+  background: rgba(89, 220, 62, 0.5);
+
+  &:before, &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 2px;
+    width: 5px;
+    margin-top: -1px;
+    margin-left: -1px;
+    background: rgba(72, 26, 9, 0.61);
+    transform: rotate(-30deg);
+  }
+  &:after {
+    height: 5px;
+    width: 2px;
+  }
+
+  &:nth-child(2n-1) {
+    &:before, &:after {
+      transform: rotate(30deg);
+    }
+  }
 }
 
 .modal-overlay {
