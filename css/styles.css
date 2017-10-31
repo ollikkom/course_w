@@ -108,7 +108,29 @@ h1 {
   height: 16px;
   margin: 2px;
   border-radius: 50%;
-  background: rgba(167, 220, 84, 0.4);
+  background: rgba(89, 220, 62, 0.5);
+}
+.apple:before,
+.apple:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 2px;
+  width: 5px;
+  margin-top: -1px;
+  margin-left: -1px;
+  background: rgba(72, 26, 9, 0.61);
+  transform: rotate(-30deg);
+}
+.apple:after {
+  height: 5px;
+  width: 2px;
+}
+.apple:nth-child(2n-1):before,
+.apple:nth-child(2n-1):after {
+  transform: rotate(30deg);
 }
 .modal-overlay {
   position: fixed;
