@@ -96,9 +96,12 @@ h1 {
   top: 0;
   width: 20px;
   height: 20px;
-  background: rgba(220, 119, 208, 0.8);
+  background: rgba(121, 186, 219, 0.8);
   transition: all 0.15s;
   will-change: transform;
+}
+.snake:first-child > div {
+  background: rgba(220, 119, 208, 0.8);
 }
 .apple {
   position: absolute;
@@ -147,9 +150,9 @@ h1 {
 }
 .modal-overlay .modal {
   text-align: center;
-  width: 25%;
-  padding: 60px 0;
-  background: #80c8c8;
+  width: 420px;
+  padding: 60px 0 50px;
+  background: rgba(152, 127, 200, 0.85);
   transform: scale(0);
   opacity: 0;
   will-change: transform;
@@ -159,13 +162,30 @@ h1 {
   color: #FFF;
   font-size: 36px;
   font-weight: 800;
+  letter-spacing: 2px;
   margin-bottom: 16px;
+}
+.modal-overlay .result {
+  color: #FFF;
+  font-size: 18px;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+.modal-overlay .result span {
+  font-weight: 800;
+}
+.modal-overlay .result .blue {
+  color: #79badb;
+}
+.modal-overlay .result .pink {
+  color: #dc77d0;
 }
 .modal-overlay .restart-btn {
   cursor: pointer;
   color: #FFF;
   font-weight: 300;
   line-height: 24px;
+  letter-spacing: 0.6px;
   display: inline-block;
   border-bottom: 1px solid rgba(255, 255, 255, 0);
   transition: border-color 0.5s;
