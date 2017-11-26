@@ -159,13 +159,20 @@ class Snake {
         const maxVal = game.areaSize - 1;
         const opponentSnake = this.id === 1 ? game.snake2 : game.snake1;
         const opponentHead = opponentSnake.coords[0];
+        const checkOutOfArea = (head) => head.x[0] < 0 || head.x[0] > maxVal || head.y[0] < 0 || head.y[0] > maxVal;
 
-        const outOfArea = thisHead.x[0] < 0 || thisHead.x[0] > maxVal || thisHead.y[0] < 0 || thisHead.y[0] > maxVal;
+        const thisOutOfArea = checkOutOfArea(thisHead);
+        const opponentOutOfArea = checkOutOfArea(opponentHead);
         const headOnCollision = opponentHead.x[0] == thisHead.x[0] && opponentHead.y[0] == thisHead.y[0];
 
-        if (outOfArea)  {
-            game.gameOver(this.id);
-            return;
+        if (thisOutOfArea)  {
+            if (opponentOutOfArea) {
+                game.gameOver(0);
+                return;
+            } else {
+                game.gameOver(this.id);
+                return;
+            }
         }
         if (headOnCollision) {
             game.gameOver(0);
