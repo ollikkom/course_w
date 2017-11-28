@@ -204,10 +204,10 @@ class Snake {
     onKeyDown(e) {
         const isFirst = this.id === 1;
         const codes = {
-            left: isFirst ? 37 : 65,   // 37 - 'pageLeft' key, 65 - 'a' key
-            right: isFirst ? 39 : 68,  // 39 - 'pageRight' key, 68 - 'd' key
-            up: isFirst ? 38 : 87,     // 38 - 'pageUp' key, 87 - 'w' key
-            down: isFirst ? 40 : 83,   // 40 - 'pageDown' key, 83 - 's' key
+            left: isFirst ? 65 : 37,   // 37 - 'pageLeft' key, 65 - 'a' key
+            right: isFirst ? 68 : 39,  // 39 - 'pageRight' key, 68 - 'd' key
+            up: isFirst ? 87 : 38,     // 38 - 'pageUp' key, 87 - 'w' key
+            down: isFirst ? 83 : 40,   // 40 - 'pageDown' key, 83 - 's' key
         };
 
         switch (e.keyCode) {
@@ -363,6 +363,7 @@ class Game {
 
     draw() {
         setTimeout(() => {
+            if (this.stopped) return; // thx ****ing tests for finding this bug!
             this.rAFid = requestAnimationFrame(this.draw.bind(this));
             Snake.moveAll();
             this.iteration++;
