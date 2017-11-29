@@ -71,9 +71,12 @@ class Snake {
         this.lastPartNewCoords = {};
         this.keyDownHandler = throttle(this.onKeyDown.bind(this), 1000 * this.gameInstance.gameSpeed);
         Snake.instances.push(this);
-        this.init();
     }
 
+    /**
+     * Функция меняющая направление змейки
+     * @param direction новое направление
+     */
     changeDirection(direction) {
         if (this.direction === restrictedDirections[direction]) return; // check if snake try to go in opposite direction
         this.direction = direction;
@@ -375,6 +378,8 @@ class Game {
         console.log('game inited');
         this.snake1 = new Snake({gameInstance: this});
         this.snake2 = new Snake({gameInstance: this});
+        this.snake1.init();
+        this.snake2.init();
         this.spawnApples();
         this.start();
         const gameGridEl = document.getElementsByClassName('gameGrid')[0];
