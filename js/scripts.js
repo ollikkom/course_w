@@ -38,6 +38,46 @@ const restrictedDirections = {
 };
 // ------------------
 
+class SnakeRenderer {
+    static spawn(snake) {
+        const snakeEl = document.createElement('div');
+        snakeEl.classList.add('snake');
+        snakeEl.id = `snake-${snake.id}`;
+        let snakeParts = '';
+        for (let i = 0; i < snake.coords.length; i++) {
+            snakeParts += `<div data-part="${i}"></div>`;
+        }
+        snakeEl.innerHTML = snakeParts;
+        document.getElementsByClassName('gameArea')[0].appendChild(snakeEl);
+
+        SnakeRenderer.render(snake);
+    }
+
+    static remove(snake) {
+        const snakeEl = document.getElementById(`snake-${snake.id}`);
+        snakeEl.remove();
+    }
+
+    static expand(snake) {
+        const snakeEl = document.getElementById(`snake-${snake.id}`);
+        const newPartEl = document.createElement('div');
+        newPartEl.dataset.part = snake.coords.length - 1;
+        snakeEl.appendChild(newPartEl);
+    }
+
+    static render(snake) {
+        if (snake.eatingApple) {
+            SnakeRenderer.expand(snake);
+        }
+        const snakeEl = document.getElementById(`snake-${snake.id}`);
+        const snakeParts = snakeEl.children;
+        for (let i = 0; i < snakeParts.length; i++) {
+            const j = snakeParts[i].dataset['part'];
+            snakeParts[i].style.transform = `translate(${snake.coords[j].x[0] * snake.gridSize}px, ${snake.coords[j].y[0] * snake.gridSize}px)`;
+        }
+    }
+}
+
 class Snake {
     static get instances() {
         Snake._instances = Snake._instances || [];
@@ -56,7 +96,6 @@ class Snake {
         Snake.instances.forEach((snake) => {
             snake.checkForLoose();
             snake.checkForApple();
-            snake.draw();
         });
     }
 
@@ -64,12 +103,11 @@ class Snake {
         this.gameInstance = options.gameInstance;
         this.gridSize = this.gameInstance.gridSize;
         this.id = Snake.counter;
-        this.snakeEl = null;
         this.length = 0;
         this.direction = '';
         this.coords = [];
+        this.eatingApple = false;
         this.lastPartNewCoords = {};
-        this.keyDownHandler = throttle(this.onKeyDown.bind(this), 1000 * this.gameInstance.gameSpeed);
         Snake.instances.push(this);
     }
 
@@ -84,6 +122,7 @@ class Snake {
 
     move() {
         if (this.gameInstance.stopped) return;
+        this.eatingApple = false;
         /**
          * @param axis - String 'x' or 'y'
          * @param value - Number 1 or -1
@@ -141,6 +180,7 @@ class Snake {
     }
 
     eatApple() {
+        this.eatingApple = true;
         this.length++;
         const newPart = {x: [], y: []};
         for (let i = 0; i < this.coords.length; i++) {
@@ -150,9 +190,6 @@ class Snake {
         newPart.x.push(this.lastPartNewCoords.x);
         newPart.y.push(this.lastPartNewCoords.y);
         this.coords.push(newPart);
-        const newPartEl = document.createElement('div');
-        newPartEl.dataset.part = this.coords.length - 1;
-        this.snakeEl.appendChild(newPartEl);
     }
 
     checkForLoose() {
@@ -195,42 +232,6 @@ class Snake {
         }
     }
 
-    draw() {
-        const self = this;
-        const snakeParts = this.snakeEl.children;
-        for (let i = 0; i < snakeParts.length; i++) {
-            const j = snakeParts[i].dataset['part'];
-            snakeParts[i].style.transform = `translate(${self.coords[j].x[0] * this.gridSize}px, ${self.coords[j].y[0] * this.gridSize}px)`;
-        }
-    }
-
-    onKeyDown(e) {
-        const isFirst = this.id === 1;
-        const codes = {
-            left: isFirst ? 65 : 37,   // 37 - 'pageLeft' key, 65 - 'a' key
-            right: isFirst ? 68 : 39,  // 39 - 'pageRight' key, 68 - 'd' key
-            up: isFirst ? 87 : 38,     // 38 - 'pageUp' key, 87 - 'w' key
-            down: isFirst ? 83 : 40,   // 40 - 'pageDown' key, 83 - 's' key
-        };
-
-        switch (e.keyCode) {
-            case codes['left']:
-                this.changeDirection('left');
-                break;
-            case codes['up']:
-                this.changeDirection('up');
-                break;
-            case codes['right']:
-                this.changeDirection('right');
-                break;
-            case codes['down']:
-                this.changeDirection('down');
-                break;
-            default:
-                break;
-        }
-    }
-
     init() {
         const isFirst = this.id === 1;
         const size = this.gameInstance.areaSize;
@@ -245,33 +246,10 @@ class Snake {
         ];
         this.length = this.coords.length;
         this.direction = isFirst ? 'right' : 'left';
-        const snakeEl = document.createElement('div');
-        snakeEl.classList.add('snake');
-        snakeEl.id = `snake-${this.id}`;
-        let snakeParts = '';
-        for (let i = 0; i < this.coords.length; i++) {
-            snakeParts += `<div data-part="${i}"></div>`;
-        }
-        snakeEl.innerHTML = snakeParts;
-        document.getElementsByClassName('gameArea')[0].appendChild(snakeEl);
-        this.snakeEl = snakeEl;
-        this.draw();
-        this.attachEvents();
     }
 
     destroy() {
-        this.snakeEl.remove();
-        this.snakeEl = null;
         this.coords = [];
-        this.dettachEvents();
-    }
-
-    attachEvents() {
-        document.addEventListener('keydown', this.keyDownHandler);
-    }
-
-    dettachEvents() {
-        document.removeEventListener('keydown', this.keyDownHandler);
     }
 };
 
@@ -369,6 +347,9 @@ class Game {
             if (this.stopped) return; // thx ****ing tests for finding this bug!
             this.rAFid = requestAnimationFrame(this.draw.bind(this));
             Snake.moveAll();
+            Snake.instances.forEach((snake) => {
+                SnakeRenderer.render(snake);
+            });
             this.iteration++;
             console.log('draw');
         }, 1000 * this.gameSpeed);
@@ -378,8 +359,7 @@ class Game {
         console.log('game inited');
         this.snake1 = new Snake({gameInstance: this});
         this.snake2 = new Snake({gameInstance: this});
-        this.snake1.init();
-        this.snake2.init();
+        this.initSnakes();
         this.spawnApples();
         this.start();
         const gameGridEl = document.getElementsByClassName('gameGrid')[0];
@@ -387,9 +367,20 @@ class Game {
         gameGridEl.style.height = `${this.areaSize * this.gridSize}px`;
     }
 
+    initSnakes() {
+        Snake.instances.forEach((snake) => {
+            snake.init();
+            this.attachEvents(snake);
+            SnakeRenderer.spawn(snake);
+        });
+    }
+
     destroy() {
-        this.snake1.destroy();
-        this.snake2.destroy();
+        Snake.instances.forEach((snake) => {
+            SnakeRenderer.remove(snake);
+            snake.destroy();
+            this.detachEvents(snake);
+        });
         this.removeApples();
         this.iteration = 0;
     }
@@ -398,8 +389,7 @@ class Game {
         console.log('game restarted');
         this.closeModal();
         this.destroy();
-        this.snake1.init();
-        this.snake2.init();
+        this.initSnakes();
         this.spawnApples();
         this.start();
     }
@@ -431,6 +421,44 @@ class Game {
 
     removeApple(id) {
         delete this.apples[id];
+    }
+
+    attachEvents(snake) {
+        this[`keyDownHandler${snake.id}`] = this.keyDownControlsHandler.bind(snake);
+        document.addEventListener('keydown', this[`keyDownHandler${snake.id}`]);
+    }
+
+    detachEvents(snake) {
+        document.removeEventListener('keydown', this[`keyDownHandler${snake.id}`]);
+    }
+
+    keyDownControlsHandler(e) {
+        throttle(() => {
+            const isFirst = this.id === 1;
+            const codes = {
+                left: isFirst ? 65 : 37,   // 37 - 'pageLeft' key, 65 - 'a' key
+                right: isFirst ? 68 : 39,  // 39 - 'pageRight' key, 68 - 'd' key
+                up: isFirst ? 87 : 38,     // 38 - 'pageUp' key, 87 - 'w' key
+                down: isFirst ? 83 : 40,   // 40 - 'pageDown' key, 83 - 's' key
+            };
+
+            switch (e.keyCode) {
+                case codes['left']:
+                    this.changeDirection('left');
+                    break;
+                case codes['up']:
+                    this.changeDirection('up');
+                    break;
+                case codes['right']:
+                    this.changeDirection('right');
+                    break;
+                case codes['down']:
+                    this.changeDirection('down');
+                    break;
+                default:
+                    break;
+            }
+        }, 1000 * this.gameInstance.gameSpeed)();
     }
 
     keyDownRestartHandler(e) {
