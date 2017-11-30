@@ -58,6 +58,10 @@ class SnakeRenderer {
         snakeEl.remove();
     }
 
+    /**
+     * Функция увеличения змейки на 1 единицу длины
+     * @param {Object} snake - экземпляр класса Snake
+     */
     static expand(snake) {
         const snakeEl = document.getElementById(`snake-${snake.id}`);
         const newPartEl = document.createElement('div');
@@ -89,14 +93,9 @@ class Snake {
         return Snake._counter;
     }
 
-    static moveAll() {
-        Snake.instances.forEach((snake) => {
-            snake.move();
-        });
-        Snake.instances.forEach((snake) => {
-            snake.checkForLoose();
-            snake.checkForApple();
-        });
+    static resetAll() {
+        Snake._counter = 0;
+        Snake._instances = [];
     }
 
     constructor(options) {
@@ -121,7 +120,7 @@ class Snake {
     }
 
     move() {
-        if (this.gameInstance.stopped) return;
+        // if (this.gameInstance.stopped) return;
         this.eatingApple = false;
         /**
          * @param axis - String 'x' or 'y'
@@ -193,7 +192,7 @@ class Snake {
     }
 
     checkForLoose() {
-        if (this.gameInstance.stopped) return;
+        // if (this.gameInstance.stopped) return;
         const thisHead = this.coords[0];
         const game = this.gameInstance;
         const maxVal = game.areaSize - 1;
@@ -309,6 +308,10 @@ class Game {
         this.openModal(winnerFromLooser[looser]);
     }
 
+    /**
+     * Функция открытия модального окна с результатами игры
+     * @param winner - победитель или ничья
+     */
     openModal(winner) {
         let result = '';
         if (winner === 'Draw') {
@@ -346,8 +349,13 @@ class Game {
         setTimeout(() => {
             if (this.stopped) return; // thx ****ing tests for finding this bug!
             this.rAFid = requestAnimationFrame(this.draw.bind(this));
-            Snake.moveAll();
             Snake.instances.forEach((snake) => {
+                snake.move();
+            });
+            Snake.instances.forEach((snake) => {
+                if (this.stopped) return;
+                snake.checkForLoose();
+                snake.checkForApple();
                 SnakeRenderer.render(snake);
             });
             this.iteration++;
@@ -385,6 +393,9 @@ class Game {
         this.iteration = 0;
     }
 
+    /**
+     * Функция перезагрузки игры
+     */
     restart() {
         console.log('game restarted');
         this.closeModal();
@@ -468,6 +479,4 @@ class Game {
     }
 };
 
-const myGame = new Game({ areaSize: 20, gameSpeed: 0.2 });
-
-myGame.init();
+window.myGame = new Game({ areaSize: 20, gameSpeed: 0.2 });
