@@ -1,9 +1,21 @@
 'use strict';
 
-// Usefull functions:
+/**
+ * Функция, возвращающая рандомное число от min до max
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
 function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
+
+/**
+ * Функция тормозилка - запускает переданную функцию не чаще чем раз в ms секунд
+ * @param func {function} функция, которую нужно затормозить
+ * @param ms {number} количество милисекунд
+ * @returns {wrapper} обертка выполняющая функцию не чаще чем раз в ms секунд
+ */
 function throttle(func, ms) {
     let isThrottled = false,
         savedArgs,
@@ -28,17 +40,27 @@ function throttle(func, ms) {
 
     return wrapper;
 }
-// ------------------
-// Usefull dictionaries:
+
+/**
+ * Попарно запрещенные направления
+ * @type {Object}
+ */
 const restrictedDirections = {
     left: 'right',
     right: 'left',
     up: 'down',
     down: 'up',
 };
-// ------------------
 
+/**
+ * Класс отрисовки
+ */
 class SnakeRenderer {
+
+    /**
+     * Функция спавнит змейку на поле
+     * @param {Object} snake - экземпляр класса Snake
+     */
     static spawn(snake) {
         const snakeEl = document.createElement('div');
         snakeEl.classList.add('snake');
@@ -53,6 +75,10 @@ class SnakeRenderer {
         SnakeRenderer.render(snake);
     }
 
+    /**
+     * Функция удаляет змейку
+     * @param {Object} snake - экземпляр класса Snake
+     */
     static remove(snake) {
         const snakeEl = document.getElementById(`snake-${snake.id}`);
         snakeEl.remove();
@@ -69,6 +95,10 @@ class SnakeRenderer {
         snakeEl.appendChild(newPartEl);
     }
 
+    /**
+     *
+     * @param {Object} snake - экземпляр класса Snake
+     */
     static render(snake) {
         if (snake.eatingApple) {
             SnakeRenderer.expand(snake);
@@ -82,22 +112,41 @@ class SnakeRenderer {
     }
 }
 
+/**
+ * Класс змейки
+ */
 class Snake {
+
+    /**
+     * Получение экземпляров класса
+     * @returns {Array}
+     */
     static get instances() {
         Snake._instances = Snake._instances || [];
         return Snake._instances;
     };
 
+    /**
+     * Счетчик количества созданных змеек для присваивания id
+     * @returns {number}
+     */
     static get counter() {
         Snake._counter = (Snake._counter || 0) + 1;
         return Snake._counter;
     }
 
+    /**
+     * Функция сброса
+     */
     static resetAll() {
         Snake._counter = 0;
         Snake._instances = [];
     }
 
+    /**
+     * Конструктор змейки
+     * @param {Object} options - экземпляр класса Game для доступа к его свойствам
+     */
     constructor(options) {
         this.gameInstance = options.gameInstance;
         this.gridSize = this.gameInstance.gridSize;
@@ -112,19 +161,22 @@ class Snake {
 
     /**
      * Функция меняющая направление змейки
-     * @param direction новое направление
+     * @param direction - новое направление
      */
     changeDirection(direction) {
         if (this.direction === restrictedDirections[direction]) return; // check if snake try to go in opposite direction
         this.direction = direction;
     }
 
+    /**
+     * Функция смещающая координаты в зависимости от направления змейки
+     */
     move() {
         // if (this.gameInstance.stopped) return;
         this.eatingApple = false;
         /**
-         * @param axis - String 'x' or 'y'
-         * @param value - Number 1 or -1
+         * @param {string} axis - String 'x' or 'y'
+         * @param {number} value - Number 1 or -1
          */
         const changeCoords = (axis, value) => {
             for (let i = 0; i < this.coords.length; i++) {
@@ -145,8 +197,6 @@ class Snake {
                 x: lastPartCoords.x[this.coords.length - 1],
                 y: lastPartCoords.y[this.coords.length - 1],
             };
-            // this.checkForLoose();
-            // this.checkForApple(lastPartNewCoords);
         };
 
         switch (this.direction) {
@@ -168,6 +218,9 @@ class Snake {
         }
     }
 
+    /**
+     * Функция проверки наличия яблока в клетке с координатами головной части змейки
+     */
     checkForApple() {
         const headCoords = this.coords[0];
         const coordsToCheck = `${headCoords.x[0]}/${headCoords.y[0]}`;
@@ -178,6 +231,9 @@ class Snake {
         }
     }
 
+    /**
+     * Функция увеличивающая змейку при съедании яблока
+     */
     eatApple() {
         this.eatingApple = true;
         this.length++;
@@ -191,6 +247,9 @@ class Snake {
         this.coords.push(newPart);
     }
 
+    /**
+     * Проверка на поражение
+     */
     checkForLoose() {
         // if (this.gameInstance.stopped) return;
         const thisHead = this.coords[0];
@@ -231,6 +290,9 @@ class Snake {
         }
     }
 
+    /**
+     * Функция иициализация змейки
+     */
     init() {
         const isFirst = this.id === 1;
         const size = this.gameInstance.areaSize;
@@ -247,12 +309,24 @@ class Snake {
         this.direction = isFirst ? 'right' : 'left';
     }
 
+    /**
+     * Функция уничтожения
+     */
     destroy() {
         this.coords = [];
     }
 };
 
+/**
+ * Класс яблока
+ */
 class Apple {
+
+    /**
+     * Конструктор класса
+     * @param {Object} options - объект параметров, содержащий в себе размер поля, размер клетки
+     * и функцию удаления яблока
+     */
     constructor(options) {
         this.x = getRandomArbitrary(0, options.areaSize);
         this.y = getRandomArbitrary(0, options.areaSize);
@@ -262,18 +336,32 @@ class Apple {
         this.removeApple = options.removeApple;
     }
 
+    /**
+     * Функция отвечает за постановку яблока на поле
+     */
     spawn() {
         document.getElementsByClassName('gameArea')[0].appendChild(this.element);
         this.element.style.transform = `translate(${this.x * this.gridSize}px, ${this.y * this.gridSize}px)`;
     }
 
+    /**
+     * Функция удаления яблока
+     */
     eat() {
         this.element.remove();
         this.removeApple(`${this.x}/${this.y}`);
     }
 }
 
+/**
+ * Класс игры
+ */
 class Game {
+
+    /**
+     * Конструктор класса
+     * @param {Object} options - объект параметров, содержащий в себе размер поля и скорость игры
+     */
     constructor(options) {
         this.snake1 = null;
         this.snake2 = null;
@@ -288,18 +376,28 @@ class Game {
         this.keyDownRestartHandler = this.keyDownRestartHandler.bind(this);
     }
 
+    /**
+     * Функция контролирует начало игры, начало отрисовки
+     */
     start() {
         this.stopped = false;
         this.draw();
         console.log('game started');
     }
 
+    /**
+     * Функция отвечает за остановку игры
+     */
     stop() {
         this.stopped = true;
         cancelAnimationFrame(this.rAFid);
         console.log('game stopped');
     }
 
+    /**
+     * Функция получения результата по окончанию игры
+     * @param {number} looser - значение, соответствующее результату игры
+     */
     gameOver(looser) {
         const winnerFromLooser = {
             0: 'Draw', 1: 'Blue', 2: 'Pink'
@@ -310,7 +408,7 @@ class Game {
 
     /**
      * Функция открытия модального окна с результатами игры
-     * @param winner - победитель или ничья
+     * @param {string} winner - победитель или ничья
      */
     openModal(winner) {
         let result = '';
@@ -335,6 +433,9 @@ class Game {
         document.addEventListener('keydown', this.keyDownRestartHandler);
     }
 
+    /**
+     * Функция закрытия модального окна
+     */
     closeModal() {
         document.getElementsByClassName('restart-btn')[0].removeEventListener('click', this.restart);
         document.removeEventListener('keydown', this.keyDownRestartHandler);
@@ -345,9 +446,12 @@ class Game {
         }, 500);
     }
 
+    /**
+     * Функция отрисовки
+     */
     draw() {
         setTimeout(() => {
-            if (this.stopped) return; // thx ****ing tests for finding this bug!
+            if (this.stopped) return; // thx tests for finding this bug!
             this.rAFid = requestAnimationFrame(this.draw.bind(this));
             Snake.instances.forEach((snake) => {
                 snake.move();
@@ -363,6 +467,9 @@ class Game {
         }, 1000 * this.gameSpeed);
     }
 
+    /**
+     * Функция инициализации игры
+     */
     init() {
         console.log('game inited');
         this.snake1 = new Snake({gameInstance: this});
@@ -375,6 +482,9 @@ class Game {
         gameGridEl.style.height = `${this.areaSize * this.gridSize}px`;
     }
 
+    /**
+     * Функция инициализации змейки
+     */
     initSnakes() {
         Snake.instances.forEach((snake) => {
             snake.init();
@@ -383,6 +493,9 @@ class Game {
         });
     }
 
+    /**
+     * Функция уничтожения
+     */
     destroy() {
         Snake.instances.forEach((snake) => {
             SnakeRenderer.remove(snake);
@@ -405,6 +518,9 @@ class Game {
         this.start();
     }
 
+    /**
+     * Функция отвечает за постановку яблока на поле
+     */
     spawnApples() {
         for (let i = 0; i < this.appleCount; i++) {
             const as = this.areaSize;
@@ -424,25 +540,44 @@ class Game {
         }
     }
 
+    /**
+     * Функция уничтожения яблок
+     */
     removeApples() {
         for (let apple in this.apples) {
             this.apples[apple].eat();
         }
     }
 
+    /**
+     *
+     * @param id
+     */
     removeApple(id) {
         delete this.apples[id];
     }
 
+    /**
+     * Функция привязки события
+     * @param {Object} snake - экземпляр класса Snake
+     */
     attachEvents(snake) {
         this[`keyDownHandler${snake.id}`] = this.keyDownControlsHandler.bind(snake);
         document.addEventListener('keydown', this[`keyDownHandler${snake.id}`]);
     }
 
+    /**
+     * Функция удаления события
+     * @param {Object} snake - экземпляр класса Snake
+     */
     detachEvents(snake) {
         document.removeEventListener('keydown', this[`keyDownHandler${snake.id}`]);
     }
 
+    /**
+     * Функция, обрабатывающая события нажатия клавиатуры
+     * @param {event} e - объект события, в котором присутствует код нажатой клавиши
+     */
     keyDownControlsHandler(e) {
         throttle(() => {
             const isFirst = this.id === 1;
@@ -472,6 +607,10 @@ class Game {
         }, 1000 * this.gameInstance.gameSpeed)();
     }
 
+    /**
+     * Функция, обрабатывающая событие нажатия клавиатуры для перезагрузки игры
+     * @param {event} e - объект события
+     */
     keyDownRestartHandler(e) {
         if (e.keyCode === 13) {
             this.restart();
