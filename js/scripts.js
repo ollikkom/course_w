@@ -58,7 +58,7 @@ const restrictedDirections = {
 class SnakeRenderer {
 
     /**
-     * Функция спавнит змейку на поле
+     * Функция спавнит змейку на поле - генерирует ее html
      * @param {Object} snake - экземпляр класса Snake
      */
     static spawn(snake) {
@@ -76,7 +76,7 @@ class SnakeRenderer {
     }
 
     /**
-     * Функция удаляет змейку
+     * Функция удаляет змейку с поля - убирает html элемент
      * @param {Object} snake - экземпляр класса Snake
      */
     static remove(snake) {
@@ -85,7 +85,7 @@ class SnakeRenderer {
     }
 
     /**
-     * Функция увеличения змейки на 1 единицу длины
+     * Функция увеличения змейки на 1 единицу длины - добавляет html элемент кусочка змейки
      * @param {Object} snake - экземпляр класса Snake
      */
     static expand(snake) {
@@ -96,7 +96,7 @@ class SnakeRenderer {
     }
 
     /**
-     *
+     * Функция отрисовки змейки на поле в соответствии с ее координатами
      * @param {Object} snake - экземпляр класса Snake
      */
     static render(snake) {
@@ -153,6 +153,7 @@ class Snake {
         this.id = Snake.counter;
         this.length = 0;
         this.direction = '';
+        this.nextDirection = '';
         this.coords = [];
         this.eatingApple = false;
         this.lastPartNewCoords = {};
@@ -164,15 +165,19 @@ class Snake {
      * @param direction - новое направление
      */
     changeDirection(direction) {
-        if (this.direction === restrictedDirections[direction]) return; // check if snake try to go in opposite direction
-        this.direction = direction;
+        this.nextDirection = direction;
     }
 
     /**
      * Функция смещающая координаты в зависимости от направления змейки
      */
     move() {
-        // if (this.gameInstance.stopped) return;
+        if (this.direction !== restrictedDirections[this.nextDirection]) {
+            this.direction = this.nextDirection;
+        } else {
+            this.nextDirection = this.direction;
+            console.log("you tried to go in opposite direction, it's bad idea, guy");
+        }
         this.eatingApple = false;
         /**
          * @param {string} axis - String 'x' or 'y'
@@ -307,6 +312,7 @@ class Snake {
         ];
         this.length = this.coords.length;
         this.direction = isFirst ? 'right' : 'left';
+        this.nextDirection = this.direction;
     }
 
     /**
@@ -322,6 +328,10 @@ class Snake {
  */
 class Apple {
 
+    static get classes() {
+        Apple._classes = ['red', 'green'];
+        return Apple._classes;
+    }
     /**
      * Конструктор класса
      * @param {Object} options - объект параметров, содержащий в себе размер поля, размер клетки
@@ -332,6 +342,7 @@ class Apple {
         this.y = getRandomArbitrary(0, options.areaSize);
         this.element = document.createElement('div');
         this.element.classList.add('apple');
+        this.element.classList.add(Apple.classes[getRandomArbitrary(0, 2)]);
         this.gridSize = options.gridSize;
         this.removeApple = options.removeApple;
     }
@@ -372,6 +383,7 @@ class Game {
         this.apples = {};
         this.iteration = 0;
         this.stopped = true;
+        this.modalRemoveTimerId = 0;
         this.restart = this.restart.bind(this);
         this.keyDownRestartHandler = this.keyDownRestartHandler.bind(this);
     }
@@ -417,6 +429,12 @@ class Game {
         } else {
             result = `<span class="${winner.toLowerCase()}">${winner}</span> snake won!`;
         }
+        clearTimeout(this.modalRemoveTimerId);
+        const prevModal = document.getElementsByClassName('modal-overlay')[0];
+        if (prevModal) {
+            prevModal.remove();
+            document.body.classList.remove('modal-closing', 'modal-opened');
+        }
         const modalEl = document.createElement('div');
         modalEl.classList.add('modal-overlay');
         modalEl.innerHTML = '<div class="modal">' +
@@ -440,7 +458,7 @@ class Game {
         document.getElementsByClassName('restart-btn')[0].removeEventListener('click', this.restart);
         document.removeEventListener('keydown', this.keyDownRestartHandler);
         document.body.classList.add('modal-closing');
-        setTimeout(() => {
+        this.modalRemoveTimerId = setTimeout(() => {
             document.getElementsByClassName('modal-overlay')[0].remove();
             document.body.classList.remove('modal-closing', 'modal-opened');
         }, 500);
@@ -457,7 +475,10 @@ class Game {
                 snake.move();
             });
             Snake.instances.forEach((snake) => {
-                if (this.stopped) return;
+                if (this.stopped) {
+                    SnakeRenderer.render(snake);
+                    return;
+                };
                 snake.checkForLoose();
                 snake.checkForApple();
                 SnakeRenderer.render(snake);
@@ -562,7 +583,7 @@ class Game {
      * @param {Object} snake - экземпляр класса Snake
      */
     attachEvents(snake) {
-        this[`keyDownHandler${snake.id}`] = this.keyDownControlsHandler.bind(snake);
+        this[`keyDownHandler${snake.id}`] = throttle(this.keyDownControlsHandler.bind(snake), 1000 * this.gameSpeed);
         document.addEventListener('keydown', this[`keyDownHandler${snake.id}`]);
     }
 
@@ -579,32 +600,30 @@ class Game {
      * @param {event} e - объект события, в котором присутствует код нажатой клавиши
      */
     keyDownControlsHandler(e) {
-        throttle(() => {
-            const isFirst = this.id === 1;
-            const codes = {
-                left: isFirst ? 65 : 37,   // 37 - 'pageLeft' key, 65 - 'a' key
-                right: isFirst ? 68 : 39,  // 39 - 'pageRight' key, 68 - 'd' key
-                up: isFirst ? 87 : 38,     // 38 - 'pageUp' key, 87 - 'w' key
-                down: isFirst ? 83 : 40,   // 40 - 'pageDown' key, 83 - 's' key
-            };
+        const isFirst = this.id === 1;
+        const codes = {
+            left: isFirst ? 65 : 37,   // 37 - 'pageLeft' key, 65 - 'a' key
+            right: isFirst ? 68 : 39,  // 39 - 'pageRight' key, 68 - 'd' key
+            up: isFirst ? 87 : 38,     // 38 - 'pageUp' key, 87 - 'w' key
+            down: isFirst ? 83 : 40,   // 40 - 'pageDown' key, 83 - 's' key
+        };
 
-            switch (e.keyCode) {
-                case codes['left']:
-                    this.changeDirection('left');
-                    break;
-                case codes['up']:
-                    this.changeDirection('up');
-                    break;
-                case codes['right']:
-                    this.changeDirection('right');
-                    break;
-                case codes['down']:
-                    this.changeDirection('down');
-                    break;
-                default:
-                    break;
-            }
-        }, 1000 * this.gameInstance.gameSpeed)();
+        switch (e.keyCode) {
+            case codes['left']:
+                this.changeDirection('left');
+                break;
+            case codes['up']:
+                this.changeDirection('up');
+                break;
+            case codes['right']:
+                this.changeDirection('right');
+                break;
+            case codes['down']:
+                this.changeDirection('down');
+                break;
+            default:
+                break;
+        }
     }
 
     /**

@@ -99,18 +99,28 @@ h1 {
     margin-top: -1px;
     margin-left: -1px;
     background: rgba(72, 26, 9, 0.61);
-    transform: rotate(-30deg);
+    //transform: rotate(-30deg);
+    animation: apple-rotation 2s linear infinite;
+    animation-delay: -0.15s;
   }
   &:after {
     height: 5px;
     width: 2px;
   }
 
-  &:nth-child(2n-1) {
-    &:before, &:after {
-      transform: rotate(30deg);
-    }
-  }
+  &.red {
+     background: rgba(230, 92, 92, 0.5);
+     &:before, &:after {
+       animation-delay: -1.85s;
+     }
+   }
+  //
+  //&.yellow {
+  //  background: rgba(230, 195, 23, 0.5);
+  //  &:before, &:after {
+  //    transform: rotate(45deg);
+  //  }
+  //}
 }
 
 .modal-overlay {
@@ -199,5 +209,14 @@ h1 {
   }
   .app {
     transform: scale(1);
+  }
+}
+
+@keyframes apple-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

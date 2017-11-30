@@ -125,15 +125,19 @@ h1 {
   margin-top: -1px;
   margin-left: -1px;
   background: rgba(72, 26, 9, 0.61);
-  transform: rotate(-30deg);
+  animation: apple-rotation 2s linear infinite;
+  animation-delay: -0.15s;
 }
 .apple:after {
   height: 5px;
   width: 2px;
 }
-.apple:nth-child(2n-1):before,
-.apple:nth-child(2n-1):after {
-  transform: rotate(30deg);
+.apple.red {
+  background: rgba(230, 92, 92, 0.5);
+}
+.apple.red:before,
+.apple.red:after {
+  animation-delay: -1.85s;
 }
 .modal-overlay {
   position: fixed;
@@ -212,4 +216,12 @@ h1 {
 }
 .modal-closing .app {
   transform: scale(1);
+}
+@keyframes apple-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
