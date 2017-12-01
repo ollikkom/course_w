@@ -1,4 +1,32 @@
-'use strict';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: scripts.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: scripts.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 
 /**
  * Функция, возвращающая рандомное число от min до max
@@ -66,8 +94,8 @@ class SnakeRenderer {
         snakeEl.classList.add('snake');
         snakeEl.id = `snake-${snake.id}`;
         let snakeParts = '';
-        for (let i = 0; i < snake.coords.length; i++) {
-            snakeParts += `<div data-part="${i}"></div>`;
+        for (let i = 0; i &lt; snake.coords.length; i++) {
+            snakeParts += `&lt;div data-part="${i}">&lt;/div>`;
         }
         snakeEl.innerHTML = snakeParts;
         document.getElementsByClassName('gameArea')[0].appendChild(snakeEl);
@@ -105,7 +133,7 @@ class SnakeRenderer {
         }
         const snakeEl = document.getElementById(`snake-${snake.id}`);
         const snakeParts = snakeEl.children;
-        for (let i = 0; i < snakeParts.length; i++) {
+        for (let i = 0; i &lt; snakeParts.length; i++) {
             const j = snakeParts[i].dataset['part'];
             snakeParts[i].style.transform = `translate(${snake.coords[j].x[0] * snake.gridSize}px, ${snake.coords[j].y[0] * snake.gridSize}px)`;
         }
@@ -184,7 +212,7 @@ class Snake {
          * @param {number} value - Number 1 or -1
          */
         const changeCoords = (axis, value) => {
-            for (let i = 0; i < this.coords.length; i++) {
+            for (let i = 0; i &lt; this.coords.length; i++) {
                 let thisPart = this.coords[i];
                 let thisPartLastCoords = {
                     x: thisPart.x[thisPart.x.length - 1],
@@ -243,7 +271,7 @@ class Snake {
         this.eatingApple = true;
         this.length++;
         const newPart = {x: [], y: []};
-        for (let i = 0; i < this.coords.length; i++) {
+        for (let i = 0; i &lt; this.coords.length; i++) {
             newPart.x.push(this.coords[0].x[0]);
             newPart.y.push(this.coords[0].y[0]);
         }
@@ -262,11 +290,11 @@ class Snake {
         const maxVal = game.areaSize - 1;
         const opponentSnake = this.id === 1 ? game.snake2 : game.snake1;
         const opponentHead = opponentSnake.coords[0];
-        const checkOutOfArea = (head) => head.x[0] < 0 || head.x[0] > maxVal || head.y[0] < 0 || head.y[0] > maxVal;
+        const checkOutOfArea = (head) => head.x[0] &lt; 0 || head.x[0] > maxVal || head.y[0] &lt; 0 || head.y[0] > maxVal;
 
         const thisOutOfArea = checkOutOfArea(thisHead);
         const opponentOutOfArea = checkOutOfArea(opponentHead);
-        const headOnCollision = opponentHead.x[0] == thisHead.x[0] && opponentHead.y[0] == thisHead.y[0];
+        const headOnCollision = opponentHead.x[0] == thisHead.x[0] &amp;&amp; opponentHead.y[0] == thisHead.y[0];
 
         if (thisOutOfArea)  {
             if (opponentOutOfArea) {
@@ -281,13 +309,13 @@ class Snake {
             game.gameOver(0);
             return;
         }
-        for (let i = 1; i < this.coords.length; i++) {
-            let ateItself = thisHead.x[0] == this.coords[i].x[0] && thisHead.y[0] == this.coords[i].y[0];
+        for (let i = 1; i &lt; this.coords.length; i++) {
+            let ateItself = thisHead.x[0] == this.coords[i].x[0] &amp;&amp; thisHead.y[0] == this.coords[i].y[0];
             if (ateItself) {
                 game.gameOver(this.id);
                 return;
             }
-            let ateByOpponent = opponentHead.x[0] == this.coords[i].x[0] && opponentHead.y[0] == this.coords[i].y[0];
+            let ateByOpponent = opponentHead.x[0] == this.coords[i].x[0] &amp;&amp; opponentHead.y[0] == this.coords[i].y[0];
             if (ateByOpponent) {
                 game.gameOver(this.id);
                 return;
@@ -427,7 +455,7 @@ class Game {
         if (winner === 'Draw') {
             result = 'Draw!';
         } else {
-            result = `<span class="${winner.toLowerCase()}">${winner}</span> snake won!`;
+            result = `&lt;span class="${winner.toLowerCase()}">${winner}&lt;/span> snake won!`;
         }
         clearTimeout(this.modalRemoveTimerId);
         const prevModal = document.getElementsByClassName('modal-overlay')[0];
@@ -437,13 +465,13 @@ class Game {
         }
         const modalEl = document.createElement('div');
         modalEl.classList.add('modal-overlay');
-        modalEl.innerHTML = '<div class="modal">' +
-            '<div class="modal-title">GAME OVER</div>' +
-            '<div class="modal-body">' +
-                `<div class="result">${result}</div>` +
-                '<div class="restart-btn">Restart</div>' +
-            '</div>' +
-            '</div>';
+        modalEl.innerHTML = '&lt;div class="modal">' +
+            '&lt;div class="modal-title">GAME OVER&lt;/div>' +
+            '&lt;div class="modal-body">' +
+                `&lt;div class="result">${result}&lt;/div>` +
+                '&lt;div class="restart-btn">Restart&lt;/div>' +
+            '&lt;/div>' +
+            '&lt;/div>';
         document.body.appendChild(modalEl);
         modalEl.getBoundingClientRect(); // force redraw, for running element transition instantly after appending to DOM
         document.body.classList.add('modal-opened');
@@ -543,7 +571,7 @@ class Game {
      * Функция отвечает за постановку яблока на поле
      */
     spawnApples() {
-        for (let i = 0; i < this.appleCount; i++) {
+        for (let i = 0; i &lt; this.appleCount; i++) {
             const as = this.areaSize;
             const apple = new Apple({
                 areaSize: as,
@@ -551,8 +579,8 @@ class Game {
                 gridSize: this.gridSize
             });
             const noAppleHere = typeof this.apples[`${apple.x}/${apple.y}`] === 'undefined';
-            const noSnakesHere = [0, 1, 2, 3, as-1, as-2, as-3, as-4].indexOf(apple.x) < 0 || [0, as-1].indexOf(apple.y) < 0;
-            if (noAppleHere && noSnakesHere) {
+            const noSnakesHere = [0, 1, 2, 3, as-1, as-2, as-3, as-4].indexOf(apple.x) &lt; 0 || [0, as-1].indexOf(apple.y) &lt; 0;
+            if (noAppleHere &amp;&amp; noSnakesHere) {
                 this.apples[`${apple.x}/${apple.y}`] = apple;
                 apple.spawn();
             } else {
@@ -637,4 +665,26 @@ class Game {
     }
 };
 
-window.myGame = new Game({ areaSize: 20, gameSpeed: 0.2 });
+window.myGame = new Game({ areaSize: 20, gameSpeed: 0.2 });</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Apple.html">Apple</a></li><li><a href="Game.html">Game</a></li><li><a href="Snake.html">Snake</a></li><li><a href="SnakeRenderer.html">SnakeRenderer</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getRandomArbitrary">getRandomArbitrary</a></li><li><a href="global.html#restrictedDirections">restrictedDirections</a></li><li><a href="global.html#throttle">throttle</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Dec 02 2017 02:13:05 GMT+0300 (MSK)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
