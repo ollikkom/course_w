@@ -270,33 +270,39 @@ class Snake {
 
         if (thisOutOfArea)  {
             if (opponentOutOfArea) {
-                game.gameOver(0);
+                game.gameOver(0, () => 'Both snakes left the game area!');
                 return;
             } else {
-                game.gameOver(this.id);
+                game.gameOver(this.id, (winner, looser) => `<span class="${looser.toLowerCase()}">${looser}</span> snake left the game area!`);
                 return;
             }
         }
         if (headOnCollision) {
-            game.gameOver(0);
+            const sameSizeSnakes = this.coords.length === opponentSnake.coords.length;
+            if (sameSizeSnakes) {
+                game.gameOver(0, () => 'Head collision of same length snakes!');
+            } else {
+                const looser = this.coords.length > opponentSnake.coords.length ? opponentSnake.id : this.id;
+                game.gameOver(looser, (winner, looser) => `Head collision, <span class="${winner.toLowerCase()}">${winner}</span> snake is longer than <span class="${looser.toLowerCase()}">${looser}</span> snake!`);
+            };
             return;
         }
         for (let i = 1; i < this.coords.length; i++) {
             let ateItself = thisHead.x[0] == this.coords[i].x[0] && thisHead.y[0] == this.coords[i].y[0];
             if (ateItself) {
-                game.gameOver(this.id);
+                game.gameOver(this.id, (winner, looser) => `<span class="${looser.toLowerCase()}">${looser}</span> snake ate itself!`);
                 return;
             }
             let ateByOpponent = opponentHead.x[0] == this.coords[i].x[0] && opponentHead.y[0] == this.coords[i].y[0];
             if (ateByOpponent) {
-                game.gameOver(this.id);
+                game.gameOver(this.id, (winner, looser) => `<span class="${winner.toLowerCase()}">${winner}</span> snake ate <span class="${looser.toLowerCase()}">${looser}</span> snake!`);
                 return;
             }
         }
     }
 
     /**
-     * Функция иициализация змейки
+     * Функция инициализация змейки
      */
     init() {
         const isFirst = this.id === 1;
@@ -410,25 +416,26 @@ class Game {
      * Функция получения результата по окончанию игры
      * @param {number} looser - значение, соответствующее результату игры
      */
-    gameOver(looser) {
-        const winnerFromLooser = {
-            0: 'Draw', 1: 'Blue', 2: 'Pink'
-        };
+    gameOver(looser, getReason) {
         this.stop();
-        this.openModal(winnerFromLooser[looser]);
+        const winnerFromLooser = { 0: 'Draw', 1: 'Blue', 2: 'Pink' };
+        const winnerColor = winnerFromLooser[looser];
+        let result = '';
+        if (looser === 0) {
+            result = 'Draw!';
+        } else {
+            result = `<span class="${winnerColor.toLowerCase()}">${winnerColor}</span> snake won!`;
+        }
+        const looserColor = looser === 1 ? 'Pink' : 'Blue';
+        result += `<br /><span class="reason">(${getReason(winnerColor, looserColor)})</span>`;
+        this.openModal(result);
     }
 
     /**
      * Функция открытия модального окна с результатами игры
      * @param {string} winner - победитель или ничья
      */
-    openModal(winner) {
-        let result = '';
-        if (winner === 'Draw') {
-            result = 'Draw!';
-        } else {
-            result = `<span class="${winner.toLowerCase()}">${winner}</span> snake won!`;
-        }
+    openModal(result) {
         clearTimeout(this.modalRemoveTimerId);
         const prevModal = document.getElementsByClassName('modal-overlay')[0];
         if (prevModal) {

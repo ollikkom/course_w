@@ -160,7 +160,7 @@ h1 {
     letter-spacing: 1px;
     margin-bottom: 20px;
 
-    span {
+    & > span {
       font-weight: 800;
     }
     .blue {
@@ -168,6 +168,13 @@ h1 {
     }
     .pink {
       color: rgb(220, 119, 208);
+    }
+
+    .reason {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 100;
     }
   }
   .restart-btn {

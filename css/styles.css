@@ -175,7 +175,7 @@ h1 {
   letter-spacing: 1px;
   margin-bottom: 20px;
 }
-.modal-overlay .result span {
+.modal-overlay .result > span {
   font-weight: 800;
 }
 .modal-overlay .result .blue {
@@ -183,6 +183,12 @@ h1 {
 }
 .modal-overlay .result .pink {
   color: #dc77d0;
+}
+.modal-overlay .result .reason {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 100;
 }
 .modal-overlay .restart-btn {
   cursor: pointer;
