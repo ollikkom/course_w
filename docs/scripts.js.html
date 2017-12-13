@@ -29,7 +29,7 @@
             <pre class="prettyprint source linenums"><code>'use strict';
 
 /**
- * Функция, возвращающая рандомное число от min до max
+ * Функция, возвращающая рандомное число от min до max.
  * @param {number} min
  * @param {number} max
  * @returns {number}
@@ -39,10 +39,10 @@ function getRandomArbitrary(min, max) {
 }
 
 /**
- * Функция тормозилка - запускает переданную функцию не чаще чем раз в ms секунд
- * @param func {function} функция, которую нужно затормозить
- * @param ms {number} количество милисекунд
- * @returns {wrapper} обертка выполняющая функцию не чаще чем раз в ms секунд
+ * Функция тормозилка - запускает переданную функцию не чаще чем раз в ms секунд.
+ * @param func {function} функция, которую нужно затормозить.
+ * @param ms {number} количество милисекунд.
+ * @returns {wrapper} обертка выполняющая функцию не чаще чем раз в ms секунд.
  */
 function throttle(func, ms) {
     let isThrottled = false,
@@ -70,7 +70,7 @@ function throttle(func, ms) {
 }
 
 /**
- * Попарно запрещенные направления
+ * Попарно запрещенные направления для движения змейки по игровому полю.
  * @type {Object}
  */
 const restrictedDirections = {
@@ -81,13 +81,13 @@ const restrictedDirections = {
 };
 
 /**
- * Класс отрисовки
+ * Класс отрисовки.
  */
 class SnakeRenderer {
 
     /**
-     * Функция спавнит змейку на поле - генерирует ее html
-     * @param {Object} snake - экземпляр класса Snake
+     * Функция спавнит змейку на поле - генерирует ее html.
+     * @param {Object} snake - экземпляр класса Snake.
      */
     static spawn(snake) {
         const snakeEl = document.createElement('div');
@@ -104,8 +104,8 @@ class SnakeRenderer {
     }
 
     /**
-     * Функция удаляет змейку с поля - убирает html элемент
-     * @param {Object} snake - экземпляр класса Snake
+     * Функция удаляет змейку с поля - убирает html элемент.
+     * @param {Object} snake - экземпляр класса Snake.
      */
     static remove(snake) {
         const snakeEl = document.getElementById(`snake-${snake.id}`);
@@ -113,8 +113,8 @@ class SnakeRenderer {
     }
 
     /**
-     * Функция увеличения змейки на 1 единицу длины - добавляет html элемент кусочка змейки
-     * @param {Object} snake - экземпляр класса Snake
+     * Функция увеличения змейки на 1 единицу длины - добавляет html элемент кусочка змейки.
+     * @param {Object} snake - экземпляр класса Snake.
      */
     static expand(snake) {
         const snakeEl = document.getElementById(`snake-${snake.id}`);
@@ -124,8 +124,8 @@ class SnakeRenderer {
     }
 
     /**
-     * Функция отрисовки змейки на поле в соответствии с ее координатами
-     * @param {Object} snake - экземпляр класса Snake
+     * Функция отрисовки змейки на поле в соответствии с ее координатами.
+     * @param {Object} snake - экземпляр класса Snake.
      */
     static render(snake) {
         if (snake.eatingApple) {
@@ -141,12 +141,12 @@ class SnakeRenderer {
 }
 
 /**
- * Класс змейки
+ * Класс змейки.
  */
 class Snake {
 
     /**
-     * Получение экземпляров класса
+     * Получение экземпляров класса.
      * @returns {Array}
      */
     static get instances() {
@@ -155,7 +155,7 @@ class Snake {
     };
 
     /**
-     * Счетчик количества созданных змеек для присваивания id
+     * Счетчик количества созданных змеек для присваивания id.
      * @returns {number}
      */
     static get counter() {
@@ -164,7 +164,7 @@ class Snake {
     }
 
     /**
-     * Функция сброса
+     * Функция сброса экземлпяров класса, также выполняет обнуление id созданных змеек.
      */
     static resetAll() {
         Snake._counter = 0;
@@ -172,8 +172,9 @@ class Snake {
     }
 
     /**
-     * Конструктор змейки
-     * @param {Object} options - экземпляр класса Game для доступа к его свойствам
+     * Конструктор змейки.
+     * Объявляет поля используемые будущими экземплярами класса.
+     * @param {Object} options - экземпляр класса Game для доступа к его свойствам.
      */
     constructor(options) {
         this.gameInstance = options.gameInstance;
@@ -189,15 +190,19 @@ class Snake {
     }
 
     /**
-     * Функция меняющая направление змейки
-     * @param direction - новое направление
+     * Функция, задающая будущее направление движения змейки по игровому полю.
+     * @param direction - новое направление ('up'/'down'/'left'/'right').
      */
     changeDirection(direction) {
         this.nextDirection = direction;
     }
 
     /**
-     * Функция смещающая координаты в зависимости от направления змейки
+     * Функция, смещающая координаты в зависимости от направления змейки.
+     * Сначала происходит проверка нового направления на противоположность текущему, в случае прохождения проверки
+     * змейка меняет координаты в соответствии с новым направлением, в противном случае - в соответствии с текущим.
+     * Затем происходит сохранение координат последней части змейки, чтобы в случае поедания яблока можно было добавить
+     * эти координаты как последние в массив координат новой части змейки.
      */
     move() {
         if (this.direction !== restrictedDirections[this.nextDirection]) {
@@ -208,8 +213,8 @@ class Snake {
         }
         this.eatingApple = false;
         /**
-         * @param {string} axis - String 'x' or 'y'
-         * @param {number} value - Number 1 or -1
+         * @param {string} axis - String 'x' or 'y'.
+         * @param {number} value - Number 1 or -1.
          */
         const changeCoords = (axis, value) => {
             for (let i = 0; i &lt; this.coords.length; i++) {
@@ -252,20 +257,21 @@ class Snake {
     }
 
     /**
-     * Функция проверки наличия яблока в клетке с координатами головной части змейки
+     * Функция проверки наличия яблока в клетке с координатами головной части змейки.
+     * В случае наличия яблока вызывается функция его поедания змейкой и удаления его из базы яблок.
      */
     checkForApple() {
         const headCoords = this.coords[0];
         const coordsToCheck = `${headCoords.x[0]}/${headCoords.y[0]}`;
         const possibleApple = this.gameInstance.apples[coordsToCheck];
         if (possibleApple) {
-            this.eatApple(this.lastPartNewCoords);
+            this.eatApple();
             possibleApple.eat();
         }
     }
 
     /**
-     * Функция увеличивающая змейку при съедании яблока
+     * Функция, добавляющая координаты новой части змейки при съедании яблока в массив координат частей змейки.
      */
     eatApple() {
         this.eatingApple = true;
@@ -281,7 +287,13 @@ class Snake {
     }
 
     /**
-     * Проверка на поражение
+     * Функция проверки на поражение.
+     * Проверяет следующие условия:
+     * 1) выход за края игрового поля,
+     * 2) выход за края одновременно с оппонентом,
+     * 3) столкновения головами змеек,
+     * 4) съедание змейкой самой себя,
+     * 5) съедание змейкой оппонента.
      */
     checkForLoose() {
         // if (this.gameInstance.stopped) return;
@@ -298,33 +310,39 @@ class Snake {
 
         if (thisOutOfArea)  {
             if (opponentOutOfArea) {
-                game.gameOver(0);
+                game.gameOver(0, () => 'Both snakes left the game area!');
                 return;
             } else {
-                game.gameOver(this.id);
+                game.gameOver(this.id, (winner, looser) => `&lt;span class="${looser.toLowerCase()}">${looser}&lt;/span> snake left the game area!`);
                 return;
             }
         }
         if (headOnCollision) {
-            game.gameOver(0);
+            const sameSizeSnakes = this.coords.length === opponentSnake.coords.length;
+            if (sameSizeSnakes) {
+                game.gameOver(0, () => 'Head collision of same length snakes!');
+            } else {
+                const looser = this.coords.length > opponentSnake.coords.length ? opponentSnake.id : this.id;
+                game.gameOver(looser, (winner, looser) => `Head collision, &lt;span class="${winner.toLowerCase()}">${winner}&lt;/span> snake is longer than &lt;span class="${looser.toLowerCase()}">${looser}&lt;/span> snake!`);
+            };
             return;
         }
         for (let i = 1; i &lt; this.coords.length; i++) {
             let ateItself = thisHead.x[0] == this.coords[i].x[0] &amp;&amp; thisHead.y[0] == this.coords[i].y[0];
             if (ateItself) {
-                game.gameOver(this.id);
+                game.gameOver(this.id, (winner, looser) => `&lt;span class="${looser.toLowerCase()}">${looser}&lt;/span> snake ate itself!`);
                 return;
             }
             let ateByOpponent = opponentHead.x[0] == this.coords[i].x[0] &amp;&amp; opponentHead.y[0] == this.coords[i].y[0];
             if (ateByOpponent) {
-                game.gameOver(this.id);
+                game.gameOver(this.id, (winner, looser) => `&lt;span class="${winner.toLowerCase()}">${winner}&lt;/span> snake ate &lt;span class="${looser.toLowerCase()}">${looser}&lt;/span> snake!`);
                 return;
             }
         }
     }
 
     /**
-     * Функция иициализация змейки
+     * Функция инициализация змейки, происходит присвоение координат и исходного и следующего за ним направления.
      */
     init() {
         const isFirst = this.id === 1;
@@ -344,7 +362,7 @@ class Snake {
     }
 
     /**
-     * Функция уничтожения
+     * Функция удаления координат змейки.
      */
     destroy() {
         this.coords = [];
@@ -352,18 +370,23 @@ class Snake {
 };
 
 /**
- * Класс яблока
+ * Класс яблока.
  */
 class Apple {
 
+    /**
+     * Функция получения доступных классов яблок для будущей генерации разных яблок на поле.
+     * @return {Array}
+     */
     static get classes() {
         Apple._classes = ['red', 'green'];
         return Apple._classes;
     }
     /**
-     * Конструктор класса
-     * @param {Object} options - объект параметров, содержащий в себе размер поля, размер клетки
-     * и функцию удаления яблока
+     * Конструктор класса.
+     * Генерирует случайные координаты, создает html элемент яблока со случайным классом из определенного набора.
+     * @param {Object} options - объект параметров, содержащий в себе размер поля, размер клетки.
+     * и функцию удаления яблока.
      */
     constructor(options) {
         this.x = getRandomArbitrary(0, options.areaSize);
@@ -376,7 +399,7 @@ class Apple {
     }
 
     /**
-     * Функция отвечает за постановку яблока на поле
+     * Функция отвечает за постановку яблока на поле в html и сдвиг согласно его координатам.
      */
     spawn() {
         document.getElementsByClassName('gameArea')[0].appendChild(this.element);
@@ -384,7 +407,7 @@ class Apple {
     }
 
     /**
-     * Функция удаления яблока
+     * Функция удаления яблока, также удаляется ключ яблока, по которому ранее происходило взаимодействие.
      */
     eat() {
         this.element.remove();
@@ -393,13 +416,14 @@ class Apple {
 }
 
 /**
- * Класс игры
+ * Класс игры.
  */
 class Game {
 
     /**
-     * Конструктор класса
-     * @param {Object} options - объект параметров, содержащий в себе размер поля и скорость игры
+     * Конструктор класса.
+     * Объявляет поля используемые будущими экземплярами класса.
+     * @param {Object} options - объект параметров, содержащий в себе размер поля и скорость игры.
      */
     constructor(options) {
         this.snake1 = null;
@@ -417,7 +441,7 @@ class Game {
     }
 
     /**
-     * Функция контролирует начало игры, начало отрисовки
+     * Снимается флаг остановки игры, а также запускается игровой цикл.
      */
     start() {
         this.stopped = false;
@@ -426,7 +450,7 @@ class Game {
     }
 
     /**
-     * Функция отвечает за остановку игры
+     * Ставится флаг остановки игры, а также отменяется вызов следующей отрисовки.
      */
     stop() {
         this.stopped = true;
@@ -435,28 +459,31 @@ class Game {
     }
 
     /**
-     * Функция получения результата по окончанию игры
-     * @param {number} looser - значение, соответствующее результату игры
+     * Функция получения результата по окончанию игры, выполняющая определение победителя, генерирующая текст результата
+     * и вызывающая функцию открытия модального окна с выводом результатов.
+     * @param {number} looser - значение, соответствующее результату игры - либо проигрыш синего (2), либо красного (1), либо ничья (0).
+     * @param {function} getReason - функция генерации текста о причине победы, в которую посылается цвета победителя и проигравшего.
      */
-    gameOver(looser) {
-        const winnerFromLooser = {
-            0: 'Draw', 1: 'Blue', 2: 'Pink'
-        };
+    gameOver(looser, getReason) {
         this.stop();
-        this.openModal(winnerFromLooser[looser]);
+        const winnerFromLooser = { 0: 'Draw', 1: 'Blue', 2: 'Pink' };
+        const winnerColor = winnerFromLooser[looser];
+        let result = '';
+        if (looser === 0) {
+            result = 'Draw!';
+        } else {
+            result = `&lt;span class="${winnerColor.toLowerCase()}">${winnerColor}&lt;/span> snake won!`;
+        }
+        const looserColor = looser === 1 ? 'Pink' : 'Blue';
+        result += `&lt;br />&lt;span class="reason">(${getReason(winnerColor, looserColor)})&lt;/span>`;
+        this.openModal(result);
     }
 
     /**
-     * Функция открытия модального окна с результатами игры
-     * @param {string} winner - победитель или ничья
+     * Функция открытия модального окна с выводом результатов игры.
+     * @param {string} result - итог игры, содержащий победителя и причину его победы.
      */
-    openModal(winner) {
-        let result = '';
-        if (winner === 'Draw') {
-            result = 'Draw!';
-        } else {
-            result = `&lt;span class="${winner.toLowerCase()}">${winner}&lt;/span> snake won!`;
-        }
+    openModal(result) {
         clearTimeout(this.modalRemoveTimerId);
         const prevModal = document.getElementsByClassName('modal-overlay')[0];
         if (prevModal) {
@@ -480,7 +507,7 @@ class Game {
     }
 
     /**
-     * Функция закрытия модального окна
+     * Функция закрытия модального окна.
      */
     closeModal() {
         document.getElementsByClassName('restart-btn')[0].removeEventListener('click', this.restart);
@@ -493,7 +520,8 @@ class Game {
     }
 
     /**
-     * Функция отрисовки
+     * Рекурсивная функция игрового цикла, изначально происходит проверка флага остановки игры,
+     * если он установлен - ничего не происходит.
      */
     draw() {
         setTimeout(() => {
@@ -517,7 +545,8 @@ class Game {
     }
 
     /**
-     * Функция инициализации игры
+     * Функция инициализации игры, происходит создание каждой из змеек, постановка яблок на поле,
+     * запускается игровой цикл, задается визуальный размер поля.
      */
     init() {
         console.log('game inited');
@@ -532,7 +561,7 @@ class Game {
     }
 
     /**
-     * Функция инициализации змейки
+     * Функция, инициализирующая, рисующая и привязывающая события к экземплярам всех змеек.
      */
     initSnakes() {
         Snake.instances.forEach((snake) => {
@@ -543,7 +572,7 @@ class Game {
     }
 
     /**
-     * Функция уничтожения
+     * Функция удаления змеек, яблок и событий.
      */
     destroy() {
         Snake.instances.forEach((snake) => {
@@ -556,7 +585,7 @@ class Game {
     }
 
     /**
-     * Функция перезагрузки игры
+     * Функция перезагрузки игры.
      */
     restart() {
         console.log('game restarted');
@@ -568,7 +597,8 @@ class Game {
     }
 
     /**
-     * Функция отвечает за постановку яблока на поле
+     * Функция постановки яблока на поле, происходит проверка на наличие змейки и яблока в ячейке,
+     * в которую необходимо заспавнить яблоко.
      */
     spawnApples() {
         for (let i = 0; i &lt; this.appleCount; i++) {
@@ -590,7 +620,7 @@ class Game {
     }
 
     /**
-     * Функция удаления яблок
+     * Функция удаления всех яблок из объекта яблок игры.
      */
     removeApples() {
         for (let apple in this.apples) {
@@ -599,16 +629,16 @@ class Game {
     }
 
     /**
-     * Функция удаления яблока
-     * @param {string} id - координаты вида 'x/y' яблока
+     * Функция удаления яблока.
+     * @param {string} id - координаты вида 'x/y' яблока.
      */
     removeApple(id) {
         delete this.apples[id];
     }
 
     /**
-     * Функция привязки события
-     * @param {Object} snake - экземпляр класса Snake
+     * Функция привязки события по нажатию на клавиатуру.
+     * @param {Object} snake - экземпляр класса Snake.
      */
     attachEvents(snake) {
         this[`keyDownHandler${snake.id}`] = throttle(this.keyDownControlsHandler.bind(snake), 1000 * this.gameSpeed);
@@ -616,16 +646,16 @@ class Game {
     }
 
     /**
-     * Функция удаления события
-     * @param {Object} snake - экземпляр класса Snake
+     * Функция удаления события.
+     * @param {Object} snake - экземпляр класса Snake.
      */
     detachEvents(snake) {
         document.removeEventListener('keydown', this[`keyDownHandler${snake.id}`]);
     }
 
     /**
-     * Функция, обрабатывающая события нажатия клавиатуры
-     * @param {event} e - объект события, в котором присутствует код нажатой клавиши
+     * Функция, обрабатывающая события нажатия клавиатуры.
+     * @param {event} e - объект события, в котором присутствует код нажатой клавиши.
      */
     keyDownControlsHandler(e) {
         const isFirst = this.id === 1;
@@ -655,8 +685,8 @@ class Game {
     }
 
     /**
-     * Функция, обрабатывающая событие нажатия клавиатуры для перезагрузки игры
-     * @param {event} e - объект события
+     * Функция, обрабатывающая событие нажатия клавиатуры для перезагрузки игры.
+     * @param {event} e - объект события.
      */
     keyDownRestartHandler(e) {
         if (e.keyCode === 13) {
@@ -681,7 +711,7 @@ window.myGame = new Game({ areaSize: 20, gameSpeed: 0.2 });</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Dec 02 2017 02:13:05 GMT+0300 (MSK)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 13 2017 23:54:21 GMT+0300 (MSK)
 </footer>
 
 <script> prettyPrint(); </script>

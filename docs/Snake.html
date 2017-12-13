@@ -30,7 +30,7 @@
     
         <h2><span class="attribs"><span class="type-signature"></span></span>Snake<span class="signature">(options)</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">Класс змейки</div>
+            <div class="class-description">Класс змейки.</div>
         
     
 </header>
@@ -53,7 +53,8 @@
 
 
 <div class="description">
-    Конструктор змейки
+    Конструктор змейки.
+Объявляет поля используемые будущими экземплярами класса.
 </div>
 
 
@@ -105,7 +106,7 @@
 
             
 
-            <td class="description last">экземпляр класса Game для доступа к его свойствам</td>
+            <td class="description last">экземпляр класса Game для доступа к его свойствам.</td>
         </tr>
 
     
@@ -200,7 +201,7 @@
 
 
 <div class="description">
-    Счетчик количества созданных змеек для присваивания id
+    Счетчик количества созданных змеек для присваивания id.
 </div>
 
 
@@ -262,7 +263,7 @@
 
 
 <div class="description">
-    Получение экземпляров класса
+    Получение экземпляров класса.
 </div>
 
 
@@ -336,7 +337,7 @@
 
 
 <div class="description">
-    Функция сброса
+    Функция сброса экземлпяров класса, также выполняет обнуление id созданных змеек.
 </div>
 
 
@@ -422,7 +423,7 @@
 
 
 <div class="description">
-    Функция меняющая направление змейки
+    Функция, задающая будущее направление движения змейки по игровому полю.
 </div>
 
 
@@ -469,7 +470,7 @@
 
             
 
-            <td class="description last">новое направление</td>
+            <td class="description last">новое направление ('up'/'down'/'left'/'right').</td>
         </tr>
 
     
@@ -510,7 +511,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line167">line 167</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line168">line 168</a>
     </li></ul></dd>
     
 
@@ -552,7 +553,8 @@
 
 
 <div class="description">
-    Функция проверки наличия яблока в клетке с координатами головной части змейки
+    Функция проверки наличия яблока в клетке с координатами головной части змейки.
+В случае наличия яблока вызывается функция его поедания змейкой и удаления его из базы яблок.
 </div>
 
 
@@ -596,7 +598,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line229">line 229</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line235">line 235</a>
     </li></ul></dd>
     
 
@@ -638,7 +640,13 @@
 
 
 <div class="description">
-    Проверка на поражение
+    Функция проверки на поражение.
+Проверяет следующие условия:
+1) выход за края игрового поля,
+2) выход за края одновременно с оппонентом,
+3) столкновения головами змеек,
+4) съедание змейкой самой себя,
+5) съедание змейкой оппонента.
 </div>
 
 
@@ -682,7 +690,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line258">line 258</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line270">line 270</a>
     </li></ul></dd>
     
 
@@ -724,7 +732,7 @@
 
 
 <div class="description">
-    Функция уничтожения
+    Функция удаления координат змейки.
 </div>
 
 
@@ -768,7 +776,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line321">line 321</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line339">line 339</a>
     </li></ul></dd>
     
 
@@ -810,7 +818,7 @@
 
 
 <div class="description">
-    Функция увеличивающая змейку при съедании яблока
+    Функция, добавляющая координаты новой части змейки при съедании яблока в массив координат частей змейки.
 </div>
 
 
@@ -854,7 +862,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line242">line 242</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line248">line 248</a>
     </li></ul></dd>
     
 
@@ -896,7 +904,7 @@
 
 
 <div class="description">
-    Функция иициализация змейки
+    Функция инициализация змейки, происходит присвоение координат и исходного и следующего за ним направления.
 </div>
 
 
@@ -940,7 +948,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line301">line 301</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line319">line 319</a>
     </li></ul></dd>
     
 
@@ -982,7 +990,11 @@
 
 
 <div class="description">
-    Функция смещающая координаты в зависимости от направления змейки
+    Функция, смещающая координаты в зависимости от направления змейки.
+Сначала происходит проверка нового направления на противоположность текущему, в случае прохождения проверки
+змейка меняет координаты в соответствии с новым направлением, в противном случае - в соответствии с текущим.
+Затем происходит сохранение координат последней части змейки, чтобы в случае поедания яблока можно было добавить
+эти координаты как последние в массив координат новой части змейки.
 </div>
 
 
@@ -1026,7 +1038,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line174">line 174</a>
+        <a href="scripts.js.html">scripts.js</a>, <a href="scripts.js.html#line179">line 179</a>
     </li></ul></dd>
     
 
@@ -1076,7 +1088,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Dec 02 2017 02:13:05 GMT+0300 (MSK)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 13 2017 23:54:21 GMT+0300 (MSK)
 </footer>
 
 <script> prettyPrint(); </script>
